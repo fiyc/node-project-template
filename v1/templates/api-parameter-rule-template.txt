@@ -1,0 +1,26 @@
+/**
+* @Author : {{author}}
+* @Date : {{time}} 
+* @FileName : api-parameter-rule.js
+* @Description : 
+    - 接口参数校验规则模块
+*/
+
+let rules = {
+
+    {{#each tables}}
+    /**
+     * {{tableAlias}}保存校验规则
+     */
+     {{tableAliasHigh}}_SAVE: {},
+
+    /**
+     * {{tableAlias}}删除校验规则
+     */
+     {{tableAliasHigh}}_REMOVE: {},
+    
+    {{/each}}
+
+}
+
+module.exports = rules;
