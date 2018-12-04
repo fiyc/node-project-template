@@ -1,0 +1,35 @@
+/**
+* @Author: {{author}}
+* @Date : {{time}}
+* @FileName : constants.js
+* @Description : 
+    - 常量模块
+*/
+
+const constants = {
+    /**
+     * 缓存层级
+     */
+    CACHE_LEVELS: {
+        {{#each tables}}
+        {{tableAlias}}_LIST: ['{{tableAlias}}', 'LIST'],
+
+        {{tableAlias}}_DETAIL: ['{{tableAlias}}'],
+
+        {{/each}}
+    },
+
+    /**
+     * 缓存key前缀
+     */
+    CACHE_KEYFLAG: {
+        {{#each tables}}
+        {{tableAlias}}_LIST: '{{tableAlias}}_LIST',
+
+        {{tableAlias}}_DETAIL: '{{tableAlias}}_DETAIL',
+
+        {{/each}}
+    }
+};
+
+module.exports = constants;
