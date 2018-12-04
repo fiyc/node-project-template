@@ -14,7 +14,7 @@ let run = function (param) {
         success: true,
         data: {
             templatePath: path.join(__dirname, '..', 'templates', 'constants-task-template.txt'),
-            savePath: path.join(process.cwd(), 'src', 'modules', 'constants.js'),
+            savePath: path.join(process.cwd(), 'src', 'common', 'constants.js'),
             param: {}
         }
     };

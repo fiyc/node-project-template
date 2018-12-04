@@ -1,0 +1,72 @@
+/**
+* @Author: {{author}}
+* @Date : {{time}} 
+* @FileName : {{tableAliasLow}}-controller.js
+* @Description : 
+    - {{comment}}配置接口
+*/
+
+let base = require('./base');
+let r = base.r;
+let errorHandle = base.errorCallback;
+let sf = require('../common/safe-function');
+
+let parameterRule = require('./api-parameter-rule');
+let valid = require('../common/parameter-validation');
+
+let {{tableAliasLow}}Data = require('../data/tableAliasLow-data');
+
+let apis = {
+    /**
+     * 列表查询
+     */
+    list: async function(req, res, next){
+        let pageNumber = req.query.pageNumber;
+        let pageSize = req.query.pageSize;
+        let response = await {{tableAliasLow}}Data.list({}, pageNumber, pageSize);
+        return r(req, res).common(response);
+    },
+
+    /**
+     * 保存
+     {{#each columns}}
+     * @param {{columnName}} {{columnComment}}
+     {{/each}}
+     */
+    save: async function(req, res, next){
+        let validRes = valid(parameterRule.{{tableAliasHigh}}_SAVE, req.body);
+        if(!validRes.success){
+            r(req, res).error(validRes.message);
+            return;
+        }
+
+        let response = await {{tableAliasLow}}Data.save({
+            {{#each columns}}
+            {{columnName}}: req.body.{{columnName}},
+            {{/each}}
+        });
+
+        r(req, res).common(response);
+    },
+
+    /**
+     * 删除
+     * @param {{primaryName}}
+     */
+    remove: async function(req, res, next){
+        let validRes = valid(parameterRule.{{tableAliasHigh}}_REMOVE, req.body);
+        if(!validRes.success){
+            r(req, res).error(validRes.message);
+            return;
+        }
+
+        let response = await {{tableAliasLow}}Data.remove({
+            {{primaryName}}: req.body.{{primaryName}}
+        });
+
+        r(req, res).common(response);
+    }
+};
+
+apis = sf.convertSafeFn(apis, errorHandle);
+module.exports = apis;

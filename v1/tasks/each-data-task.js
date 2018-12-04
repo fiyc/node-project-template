@@ -37,7 +37,7 @@ let run = function (param) {
 
         result.data.push({
             templatePath: path.join(__dirname, '..', 'templates', 'each-data-task-template.txt'),
-            savePath: path.join(process.cwd(), 'src', 'modules', `${table.tableAliasLow}-data.js`),
+            savePath: path.join(process.cwd(), 'src', 'data', `${table.tableAliasLow}-data.js`),
             param: table
         });
     }
