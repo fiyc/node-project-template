@@ -1,0 +1,57 @@
+/**
+* @Author: {{author}}
+* @Date : {{time}} 
+* @FileName : databse-module.js
+* @Description : 
+    - 数据库模块
+*/
+
+const config = require('../config');
+
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize(config.dbName, '', '', {
+    host: 'localhost',
+    dialect: 'sqlite',
+    operatorsAliases: false,
+    pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000
+    },
+
+    storage: config.dbFilePath,
+    logging: false
+});
+
+{{#each tables}}
+/**
+ * {{comment}}
+ */
+const {{tableAlias}} = sequelize.define('{{tableName}}', {
+
+    {{#each columns}}
+    /**
+     * {{columnComment}}
+     */
+    {{columnName}}: {
+        type: Sequelize.{{columnType}},
+        primaryKey: {{isPrimary}},
+        autoIncrement: {{isPrimary}}
+    },
+
+    {{/each}}
+
+}, {
+    timestamps: false,
+    freezeTableName: true
+});
+{{tableAlias}}.sync();
+
+{{/each}}
+
+module.exports = {
+    {{#each tables}}
+    {{tableAlias}},
+    {{/each}}
+}
