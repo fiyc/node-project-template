@@ -9,6 +9,7 @@
 let path = require('path');
 
 let run = function (param) {
+    param = JSON.parse(JSON.stringify(param));
     let result = {
         success: true,
         data: {
