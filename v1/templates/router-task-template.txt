@@ -1,0 +1,26 @@
+/**
+* @Author: {{author}}
+* @Date : {{time}} 
+* @FileName : api.js
+* @Description : 
+    - 接口路由模块
+*/
+
+
+var express = require('express');
+var router = express.Router();
+
+{{#each tables}}
+let {{tableAliasLow}}Api = require('../controller/{{tableAliasLow}-controller});
+{{/each}}
+
+
+
+{{#each tables}}
+router.get('/{{tableAliasLow}}/list', {{tableAliasLow}}Api.list);
+router.put('/{{tableAliasLow}}/save', {{tableAliasLow}}Api.save);
+router.delete('/{{tableAliasLow}}/delete', {{tableAliasLow}}Api.remove);
+
+{{/each}}
+
+module.exports = router;
