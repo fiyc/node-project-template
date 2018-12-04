@@ -1,0 +1,114 @@
+/**
+* @Author: {{author}}
+* @Date : {{time}}
+* @FileName : {{tableAliasLow}}-data.js
+* @Description : 
+    - {{comment}}数据模块
+*/
+
+let r = require('../common/r');
+let sf = require('../common/safe-function');
+let ds = require('../modules/database-module');
+let cache = require('../common/cache-pool');
+let constants = require('../common/constants');
+
+let service = {
+    /**
+     * 查询
+     {{#each columns}}
+     * @param {{columnName}} {{columnComment}}
+     {{/each}}
+     * 
+     * @param pageNumber
+     * @param pageSize
+     */
+    list: async function(param, pageNumber, pageSize){
+        param = param || {};
+        pageNumber = pageNumber || 0;
+        pageSize = pageSize || 0;
+
+        let cacheKey = cache.makeCacheKey(constants.CACHE_KEYFLAG.{{tableAliasHigh}}_LIST, 
+                                                                    {{#each columns}}
+                                                                    param.{{columnName}},
+                                                                    {{/each}}
+                                                                    pageNumber, pageSize);
+        let cacheResult = cache.getCache(constants.CACHE_LEVELS.{{tableAliasHigh}}_LIST, cacheKey); 
+
+        if(cacheResult){
+            return cacheResult;
+        }
+
+        let filter = {
+            where: param
+        };
+
+        if (pageNumber > 0 && pageSize > 0) {
+            filter.offset = (pageNumber - 1) * pageSize;
+            filter.limit = pageSize;
+        }
+
+        let queryResult = await ds.Topic.findAndCountAll(filter);
+        let resultData = {
+            total: 0,
+            list: []
+        };
+
+        if(queryResult && queryResult.count > 0){
+            resultData.total = queryResult.count;
+
+            for(let item of queryResult.rows){
+               resultData.list.push({
+                    {{#each columns}}
+                    {{columnName}}: item.{{columnName}},
+                    {{/each}}
+               }); 
+            }
+        }
+
+        let result = r.success('success', resultData);
+        cache.pushCache(constants.CACHE_LEVELS.{{tableAliasHigh}}_LIST, cacheKey, result);
+        return result;
+    },
+
+    /**
+     * 保存
+     {{#each columns}}
+     * @param {{columnName}} {{columnComment}}
+     {{/each}}
+     */
+    save: async function(param){
+        param = param || {};
+
+        if(param.{{primaryName}} > 0){
+            await ds.{{tableAlias}}.update(param, {where: {{{primaryName}}: param.{{primaryName}}}});
+        }else{
+            let insertResult = await ds.{{tableAlias}}.create(param);
+            if(insertResult){
+                param.{{primaryName}} = insertResult.{{primaryName}};
+            }
+        }
+
+        cache.clearCache(constants.CACHE_LEVELS.{{tableAliasHigh}}_LIST);
+        return r.success('success', param);
+    },
+
+    /**
+     * 删除
+     {{#each columns}}
+     * @param {{columnName}} {{columnComment}}
+     {{/each}}
+     */
+    remove: async function(param){
+        param = param || {};
+        let filter = {
+            where: param
+        };
+
+        let deleteCount = await ds.{{tableAlias}}.destroy(filter);
+        cache.clearCache(constants.CACHE_LEVELS.{{tableAliasHigh}}_LIST);
+        return r.success('success', deleteCount);
+    }
+};
+
+service = sf.convertSafeFn(service);
+module.exports = service;
