@@ -1,0 +1,14 @@
+{
+    "id": 0,
+    "appName": "{{name}}",
+    "appAuthor": "{{author}}",
+    "appDescription": "",
+    "appIsLocal": true,
+    "autoStart": true,
+    "appLang": "node",
+    "appHost": "127.0.0.1",
+    "appPort": {{port}},
+    "appEntryFile": "./bin/www",
+    "appLogoUrl": "/images/logo.png",
+    "appHomeUrl": "/index.html"
+}

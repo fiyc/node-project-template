@@ -1,9 +1,9 @@
 /**
 * @Author: fiyc
 * @Date : 2018-12-04 16:06
-* @FileName : package-task.js
+* @FileName : app-task.js
 * @Description : 
-    - package.json 文件生成任务
+    - app.json 项目信息模块生成任务
 */
 
 let path = require('path');
@@ -13,8 +13,8 @@ let run = function (param) {
     let result = {
         success: true,
         data: {
-            templatePath: path.join(__dirname, '..', 'templates', 'package-task-template.txt'),
-            savePath: path.join(process.cwd(), 'package.json'),
+            templatePath: path.join(__dirname, '..', 'templates', 'app-task-template.txt'),
+            savePath: path.join(process.cwd(), 'app.json'),
             param: {}
         }
     };
@@ -28,10 +28,7 @@ let run = function (param) {
         param.author = 'nobody';
     }
 
-    result.data.param = {
-        name: param.name,
-        author: param.author
-    };
+    result.data.param = param;
     return result;
 }
 
