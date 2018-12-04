@@ -12,9 +12,9 @@ const constants = {
      */
     CACHE_LEVELS: {
         {{#each tables}}
-        {{tableAlias}}_LIST: ['{{tableAlias}}', 'LIST'],
+        {{tableAliasHigh}}_LIST: ['{{tableAliasHigh}}', 'LIST'],
 
-        {{tableAlias}}_DETAIL: ['{{tableAlias}}'],
+        {{tableAliasHigh}}_DETAIL: ['{{tableAliasHigh}}'],
 
         {{/each}}
     },
@@ -24,9 +24,9 @@ const constants = {
      */
     CACHE_KEYFLAG: {
         {{#each tables}}
-        {{tableAlias}}_LIST: '{{tableAlias}}_LIST',
+        {{tableAliasHigh}}_LIST: '{{tableAliasHigh}}_LIST',
 
-        {{tableAlias}}_DETAIL: '{{tableAlias}}_DETAIL',
+        {{tableAliasHigh}}_DETAIL: '{{tableAliasHigh}}_DETAIL',
 
         {{/each}}
     }

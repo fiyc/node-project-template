@@ -30,6 +30,11 @@ let run = function (param) {
 
     param.time = new Date().Format('yyyy-MM-dd hh:mm:ss');
     
+    for(let table of param.tables){
+        table.tableAliasHigh = (table.tableAlias || "").toUpperCase();
+        table.tableAliasLow = (table.tableAlias || "").toLowerCase();
+    }
+
     result.data.param = param;
     return result;
 }
