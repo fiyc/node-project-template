@@ -80,7 +80,6 @@ let service = {
         param = param || {};
 
         if(param.{{primaryName}} > 0){
-            await ds.{{tableAlias}}.update(param, {where: {{{primaryName}}: param.{{primaryName}}}});
             await ds.{{tableAlias}}.update(param, {
                 where: {
                     {{primaryName}}: param.{{primaryName}}
