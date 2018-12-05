@@ -81,6 +81,11 @@ let service = {
 
         if(param.{{primaryName}} > 0){
             await ds.{{tableAlias}}.update(param, {where: {{{primaryName}}: param.{{primaryName}}}});
+            await ds.{{tableAlias}}.update(param, {
+                where: {
+                    {{primaryName}}: param.{{primaryName}}
+                }
+            });
         }else{
             let insertResult = await ds.{{tableAlias}}.create(param);
             if(insertResult){
