@@ -14,7 +14,7 @@ let sf = require('../common/safe-function');
 let parameterRule = require('./api-parameter-rule');
 let valid = require('../common/parameter-validation');
 
-let {{tableAliasLow}}Data = require('../data/tableAliasLow-data');
+let {{tableAliasLow}}Data = require('../data/{{tableAliasLow}}-data');
 
 let apis = {
     /**
