@@ -47,7 +47,7 @@ let service = {
             filter.limit = pageSize;
         }
 
-        let queryResult = await ds.Topic.findAndCountAll(filter);
+        let queryResult = await ds.{{tableAlias}}.findAndCountAll(filter);
         let resultData = {
             total: 0,
             list: []
