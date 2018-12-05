@@ -11,7 +11,7 @@ var express = require('express');
 var router = express.Router();
 
 {{#each tables}}
-let {{tableAliasLow}}Api = require('../controller/{{tableAliasLow}-controller});
+let {{tableAliasLow}}Api = require('../controller/{{tableAliasLow}}-controller);
 {{/each}}
 
 
