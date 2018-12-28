@@ -24,6 +24,11 @@ let service = {
      */
     list: async function(param, pageNumber, pageSize, doCache){
         param = param || {};
+        for(let key in param){
+            if(param[key] === undefined){
+                delete param[key];
+            }
+        }
         pageNumber = pageNumber || 0;
         pageSize = pageSize || 0;
 
