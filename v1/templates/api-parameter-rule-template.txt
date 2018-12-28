@@ -10,6 +10,16 @@ let rules = {
 
     {{#each tables}}
     /**
+     * {{tableAlias}}集合查询校验规则
+     */
+     {{tableAliasHigh}}_LIST: {},
+
+    /**
+     * {{tableAlias}}详情查询校验规则
+     */
+     {{tableAliasHigh}}_DETAIL: {},
+
+    /**
      * {{tableAlias}}保存校验规则
      */
      {{tableAliasHigh}}_SAVE: {},

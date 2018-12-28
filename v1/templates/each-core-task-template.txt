@@ -1,0 +1,57 @@
+/**
+* @Author: {{author}}
+* @Date : {{time}}
+* @FileName : {{tableAliasLow}}-core.js
+* @Description : 
+    - {{comment}} 逻辑层
+*/
+
+let r = require('../common/r');
+let sf = require('../common/safe-function');
+let {{tableAliasLow}}Data = require('../data/{{tableAliasLow}}-data');
+
+let core = {
+    /**
+     * 查询
+     {{#each columns}}
+     * @param {{columnName}} {{columnComment}}
+     {{/each}}
+     * 
+     * @param pageNumber
+     * @param pageSize
+     */
+    list: async function(param, pageNumber, pageSize){
+        return await {{tableAliasLow}}Data.list(param, pageNumber, pageSize);
+    },
+
+    /**
+    * 详情查询
+    * @param {{primaryName}} 主键
+    */
+    detail: async function({{primaryName}}){
+        return await {{tableAliasLow}}Data.detail({{primaryName}});
+    },
+
+    /**
+     * 保存
+     {{#each columns}}
+     * @param {{columnName}} {{columnComment}}
+     {{/each}}
+     */
+    save: async function(param){
+        return await {{tableAliasLow}}Data.save(param);
+    },
+
+    /**
+     * 删除
+     {{#each columns}}
+     * @param {{columnName}} {{columnComment}}
+     {{/each}}
+     */
+    remove: async function(param){
+        return await {{tableAliasLow}}Data.remove(param);
+    }
+};
+
+core = sf.convertSafeFn(core);
+module.exports = core;

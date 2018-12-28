@@ -14,18 +14,49 @@ let sf = require('../common/safe-function');
 let parameterRule = require('./api-parameter-rule');
 let valid = require('../common/parameter-validation');
 
-let {{tableAliasLow}}Data = require('../data/{{tableAliasLow}}-data');
+let {{tableAliasLow}}Core = require('../core/{{tableAliasLow}}-core');
 
 let apis = {
     /**
      * 列表查询
+     {{#each columns}}
+     * @param {{columnName}} {{columnComment}}
+     {{/each}}
      */
     list: async function(req, res, next){
+        let validRes = valid(parameterRule.{{tableAliasHigh}}_LIST, req.query);
+        if(!validRes.success){
+            r(req, res).error(validRes.message);
+            return;
+        }
+
+        let param = {
+            {{#each columns}}
+            {{columnName}}: req.query.{{columnName}},
+            {{/each}}
+        };
+
         let pageNumber = req.query.pageNumber;
         let pageSize = req.query.pageSize;
-        let response = await {{tableAliasLow}}Data.list({}, pageNumber, pageSize);
+        let response = await {{tableAliasLow}}Core.list(param, pageNumber, pageSize);
         return r(req, res).common(response);
     },
+
+    /**
+     * 详情查询
+     * @param {{primaryName}}
+     */
+    detail: async function(req, res, next){
+        let validRes = valid(parameterRule.{{tableAliasHigh}}_DETAIL, req.query);
+        if(!validRes.success){
+            r(req, res).error(validRes.message);
+            return;
+        }
+
+        let response = await {{tableAliasLow}}Core.detail(req.query.{{primaryName}});
+
+        r(req, res).common(response);
+    }
 
     /**
      * 保存
@@ -40,7 +71,7 @@ let apis = {
             return;
         }
 
-        let response = await {{tableAliasLow}}Data.save({
+        let response = await {{tableAliasLow}}Core.save({
             {{#each columns}}
             {{columnName}}: req.body.{{columnName}},
             {{/each}}
@@ -60,7 +91,7 @@ let apis = {
             return;
         }
 
-        let response = await {{tableAliasLow}}Data.remove({
+        let response = await {{tableAliasLow}}Core.remove({
             {{primaryName}}: req.body.{{primaryName}}
         });
 

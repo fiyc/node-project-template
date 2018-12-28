@@ -22,21 +22,25 @@ let service = {
      * @param pageNumber
      * @param pageSize
      */
-    list: async function(param, pageNumber, pageSize){
+    list: async function(param, pageNumber, pageSize, doCache){
         param = param || {};
         pageNumber = pageNumber || 0;
         pageSize = pageSize || 0;
 
-        let cacheKey = cache.makeCacheKey(constants.CACHE_KEYFLAG.{{tableAliasHigh}}_LIST, 
+        let cacheKey;
+        if(doCache){
+            cacheKey = cache.makeCacheKey(constants.CACHE_KEYFLAG.{{tableAliasHigh}}_LIST, 
                                                                     {{#each columns}}
                                                                     param.{{columnName}},
                                                                     {{/each}}
                                                                     pageNumber, pageSize);
-        let cacheResult = cache.getCache(constants.CACHE_LEVELS.{{tableAliasHigh}}_LIST, cacheKey); 
+            let cacheResult = cache.getCache(constants.CACHE_LEVELS.{{tableAliasHigh}}_LIST, cacheKey); 
 
-        if(cacheResult){
-            return cacheResult;
+            if(cacheResult){
+                return cacheResult;
+            }
         }
+        
 
         let filter = {
             where: param
@@ -66,7 +70,41 @@ let service = {
         }
 
         let result = r.success('success', resultData);
-        cache.pushCache(constants.CACHE_LEVELS.{{tableAliasHigh}}_LIST, cacheKey, result);
+        if(doCache){
+            cache.pushCache(constants.CACHE_LEVELS.{{tableAliasHigh}}_LIST, cacheKey, result);
+        }
+        return result;
+    },
+
+    /**
+    * 详情查询
+    * @param {{primaryName}} 主键
+    */
+    detail: async function({{primaryName}}, doCache){
+        let cacheKey;
+        if (doCache) {
+            cacheKey = cache.makeCacheKey(constants.CACHE_KEYFLAG.{{tableAliasHigh}}_DETAIL, {{primaryName}});
+            let cacheResult = cache.getCache(constants.CACHE_LEVELS.{{tableAliasHigh}}_DETAIL, cacheKey);
+            if (cacheResult) {
+                return cacheResult;
+            }
+        }
+
+        let detail = await ds.{{tableAlias}}.findByPk({{primaryName}});
+        let resultData;
+
+        if(detail){
+            resultData = {
+                {{#each columns}}
+                {{columnName}}: detail.{{columnName}},
+                {{/each}}
+            };
+        }
+
+        let result = r.success('success', resultData);
+        if (doCache) {
+            cache.pushCache(constants.CACHE_LEVELS.{{tableAliasHigh}}_DETAIL, cacheKey, result);
+        }
         return result;
     },
 
@@ -93,6 +131,10 @@ let service = {
         }
 
         cache.clearCache(constants.CACHE_LEVELS.{{tableAliasHigh}}_LIST);
+        if(param.{{primaryName}} > 0){
+            let cacheKey = cache.makeCacheKey(constants.CACHE_KEYFLAG.{{tableAliasHigh}}_DETAIL, param.{{primaryName}});
+            cache.clearCache(constants.CACHE_LEVELS.{{tableAliasHigh}}_DETAIL, cacheKey);
+        }
         return r.success('success', param);
     },
 
@@ -108,9 +150,20 @@ let service = {
             where: param
         };
 
-        let deleteCount = await ds.{{tableAlias}}.destroy(filter);
+        let removeCacheKeys = [];
+        let removeList = service.list(param);
+        if (removeList && removeList.data && removeList.data.list) {
+            for (let removeItem of removeList.data.list) {
+                removeCacheKeys.push(cache.makeCacheKey(constants.CACHE_KEYFLAG.{{tableAliasHigh}}_DETAIL, removeItem.{{primaryName}}));
+            }
+        }
+
+        await ds.{{tableAlias}}.destroy(filter);
         cache.clearCache(constants.CACHE_LEVELS.{{tableAliasHigh}}_LIST);
-        return r.success('success', deleteCount);
+        for (let key of removeCacheKeys) {
+            cache.clearCache(constants.CACHE_LEVELS.{{tableAliasHigh}}_DETAIL, key);
+        }
+        return removeList;
     }
 };
 

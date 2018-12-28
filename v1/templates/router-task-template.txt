@@ -18,6 +18,7 @@ let {{tableAliasLow}}Api = require('../controller/{{tableAliasLow}}-controller')
 
 {{#each tables}}
 router.get('/{{tableAliasLow}}/list', {{tableAliasLow}}Api.list);
+router.get('/{{tableAliasLow}}/detail', {{tableAliasLow}}Api.detail);
 router.put('/{{tableAliasLow}}/save', {{tableAliasLow}}Api.save);
 router.delete('/{{tableAliasLow}}/delete', {{tableAliasLow}}Api.remove);
 
