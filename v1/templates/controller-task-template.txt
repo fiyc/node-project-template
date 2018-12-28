@@ -56,7 +56,7 @@ let apis = {
         let response = await {{tableAliasLow}}Core.detail(req.query.{{primaryName}});
 
         r(req, res).common(response);
-    }
+    },
 
     /**
      * 保存
